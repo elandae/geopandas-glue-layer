@@ -1,19 +1,16 @@
 name: Build Geopandas Layer for AWS Glue
 
 on:
-  workflow_dispatch:  # permite ejecutarlo manualmente
+  workflow_dispatch:
 
 jobs:
   build-layer:
-    runs-on: ubuntu-latest
-    container:
-      image: amazonlinux:2
+    runs-on: ubuntu-latest  # sin contenedor
     steps:
-      - name: Instalar herramientas del sistema
+      - name: Instalar dependencias del sistema
         run: |
-          yum -y update
-          yum -y groupinstall "Development Tools"
-          yum -y install python3 python3-devel gcc gdal gdal-devel geos geos-devel proj proj-devel zip
+          sudo apt update
+          sudo apt install -y python3-venv python3-dev g++ gcc gdal-bin libgdal-dev libproj-dev libgeos-dev zip
 
       - name: Crear entorno virtual e instalar geopandas
         run: |
@@ -22,13 +19,13 @@ jobs:
           pip install --upgrade pip
           pip install geopandas
 
-      - name: Empaquetar site-packages en zip
+      - name: Empaquetar site-packages
         run: |
           cd venv/lib/python3.*/site-packages
-          zip -r9 /geopandas_layer.zip .
+          zip -r9 ../../../../geopandas_layer.zip .
 
-      - name: Subir artefacto con Geopandas
+      - name: Subir artefacto
         uses: actions/upload-artifact@v4
         with:
           name: geopandas_layer
-          path: /geopandas_layer.zip
+          path: geopandas_layer.zip
