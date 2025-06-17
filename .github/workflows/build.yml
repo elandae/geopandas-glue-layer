@@ -1,7 +1,7 @@
 name: Build Geopandas Layer for AWS Glue
 
 on:
-  workflow_dispatch:  # permite ejecutar manualmente
+  workflow_dispatch:  # permite ejecutarlo manualmente
 
 jobs:
   build-layer:
@@ -27,8 +27,8 @@ jobs:
           cd venv/lib/python3.*/site-packages
           zip -r9 /geopandas_layer.zip .
 
-      - name: Subir artefacto
-        uses: actions/upload-artifact@v3
+      - name: Subir artefacto con Geopandas
+        uses: actions/upload-artifact@v4
         with:
           name: geopandas_layer
           path: /geopandas_layer.zip
